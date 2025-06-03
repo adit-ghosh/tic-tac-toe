@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tic Tac Toe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Check theme before page loads
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%234A90E2"/><path d="M30 30 L70 70 M70 30 L30 70" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>'/>
+    <style>
+        .cell {
+            transition: all 0.3s ease;
+            transform: scale(1);
+        }
+        .cell:active {
+            transform: scale(0.95);
+        }
+        .winner-cell {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        /* Add a fade-in animation for page load */
+        body {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
+    
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">Tic Tac Toe</h1>
+        <div class="text-sm text-gray-500 dark:text-gray-400">Play against a friend or challenge yourself!</div>
+    </div>
+    
+    <div id="status" class="text-xl font-semibold mb-6 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg transition-colors duration-300">Player X's Turn</div>
+    
+    <div class="grid grid-cols-3 gap-3 mb-8 bg-gray-300 dark:bg-gray-700 p-4 rounded-xl shadow-lg">
+        <button class="cell w-24 h-24 bg-white dark:bg-gray-800 text-4xl font-bold rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"></button>
+        <button class="cell w-24 h-24 bg-white dark:bg-gray-800 text-4xl font-bold rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"></button>
+        <button class="cell w-24 h-24 bg-white dark:bg-gray-800 text-4xl font-bold rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"></button>
+        <button class="cell w-24 h-24 bg-white dark:bg-gray-800 text-4xl font-bold rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"></button>
+        <button class="cell w-24 h-24 bg-white dark:bg-gray-800 text-4xl font-bold rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"></button>
+        <button class="cell w-24 h-24 bg-white dark:bg-gray-800 text-4xl font-bold rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"></button>
+        <button class="cell w-24 h-24 bg-white dark:bg-gray-800 text-4xl font-bold rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"></button>
+        <button class="cell w-24 h-24 bg-white dark:bg-gray-800 text-4xl font-bold rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"></button>
+        <button class="cell w-24 h-24 bg-white dark:bg-gray-800 text-4xl font-bold rounded-lg shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"></button>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-4 mb-8">
+        <button id="reset" class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-all duration-300 font-semibold flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+            </svg>
+            Reset Game
+        </button>
+        <button id="undo" class="px-6 py-3 bg-gray-600 text-white rounded-lg shadow hover:bg-gray-700 transition-all duration-300 font-semibold flex items-center justify-center" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v1a1 1 0 11-2 0v-1a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+            Undo Move
+        </button>
+    </div>
+
+    <div id="score" class="grid grid-cols-3 gap-6 text-center mb-8">
+        <div class="bg-blue-100 dark:bg-blue-900/30 p-4 rounded-xl shadow">
+            <div class="text-lg font-semibold text-blue-800 dark:text-blue-200">X Wins</div>
+            <div id="xScore" class="text-3xl font-bold text-blue-600 dark:text-blue-400">0</div>
+        </div>
+        <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl shadow">
+            <div class="text-lg font-semibold text-gray-800 dark:text-gray-200">Draws</div>
+            <div id="drawScore" class="text-3xl font-bold text-gray-600 dark:text-gray-400">0</div>
+        </div>
+        <div class="bg-red-100 dark:bg-red-900/30 p-4 rounded-xl shadow">
+            <div class="text-lg font-semibold text-red-800 dark:text-red-200">O Wins</div>
+            <div id="oScore" class="text-3xl font-bold text-red-600 dark:text-red-400">0</div>
+        </div>
+    </div>
+
+    <div class="text-yellow-500 opacity-0">By Adit Ghosh</div>
+
+    <script>
+        // Set Tailwind config after the browser has loaded
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                darkMode: 'class'
+            };
+        }
+        
+        const cells = document.querySelectorAll('.cell');
+        const status = document.getElementById('status');
+        const resetBtn = document.getElementById('reset');
+        const undoBtn = document.getElementById('undo');
+        const themeToggle = document.getElementById('themeToggle');
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+        let moveHistory = [];
+        let scores = { X: 0, O: 0, draws: 0 };
+
+        const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+            [0, 4, 8], [2, 4, 6] // diagonals
+        ];
+
+        cells.forEach((cell, index) => {
+            cell.addEventListener('click', () => handleCellClick(index));
+        });
+
+        resetBtn.addEventListener('click', resetGame);
+        undoBtn.addEventListener('click', undoMove);
+
+        themeToggle.addEventListener('click', () => {
+            // Toggle dark class on html element
+            document.documentElement.classList.toggle('dark');
+            
+            // Update localStorage
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+            
+            // Update button label for screen readers
+            const isDark = document.documentElement.classList.contains('dark');
+            themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        });
+
+        // Add initial aria-label
+        const isDarkInitial = document.documentElement.classList.contains('dark');
+        themeToggle.setAttribute('aria-label', isDarkInitial ? 'Switch to light mode' : 'Switch to dark mode');
+
+        function handleCellClick(index) {
+            if (gameBoard[index] === '' && gameActive) {
+                moveHistory.push({ index, player: currentPlayer });
+                undoBtn.disabled = false;
+
+                gameBoard[index] = currentPlayer;
+                cells[index].textContent = currentPlayer;
+                cells[index].classList.add(currentPlayer === 'X' ? 'text-blue-500' : 'text-red-500');
+
+                if (checkWin()) {
+                    const winningCombination = getWinningCombination();
+                    highlightWinningCells(winningCombination);
+                    status.textContent = `Player ${currentPlayer} wins! 🎉`;
+                    status.classList.add(currentPlayer === 'X' ? 'text-blue-500' : 'text-red-500');
+                    gameActive = false;
+                    scores[currentPlayer]++;
+                    updateScoreDisplay();
+                    return;
+                }
+
+                if (checkDraw()) {
+                    status.textContent = "It's a draw! 🤝";
+                    status.classList.add('text-gray-600', 'dark:text-gray-300');
+                    gameActive = false;
+                    scores.draws++;
+                    updateScoreDisplay();
+                    return;
+                }
+
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                status.textContent = `Player ${currentPlayer}'s Turn`;
+                status.classList.remove('text-blue-500', 'text-red-500', 'text-gray-600', 'dark:text-gray-300');
+                status.classList.add(currentPlayer === 'X' ? 'text-blue-500' : 'text-red-500');
+            }
+        }
+
+        function getWinningCombination() {
+            return winPatterns.find(pattern => {
+                return pattern.every(index => gameBoard[index] === currentPlayer);
+            });
+        }
+
+        function highlightWinningCells(combination) {
+            combination.forEach(index => {
+                cells[index].classList.add('winner-cell');
+                cells[index].classList.add(currentPlayer === 'X' ? 'bg-blue-100' : 'bg-red-100');
+                cells[index].classList.add(currentPlayer === 'X' ? 'dark:bg-blue-900/50' : 'dark:bg-red-900/50');
+            });
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById('xScore').textContent = scores.X;
+            document.getElementById('oScore').textContent = scores.O;
+            document.getElementById('drawScore').textContent = scores.draws;
+        }
+
+        function checkWin() {
+            return winPatterns.some(pattern => {
+                return pattern.every(index => {
+                    return gameBoard[index] === currentPlayer;
+                });
+            });
+        }
+
+        function checkDraw() {
+            return gameBoard.every(cell => cell !== '');
+        }
+
+        function resetGame() {
+            moveHistory = [];
+            undoBtn.disabled = true;
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            currentPlayer = 'X';
+            status.textContent = `Player ${currentPlayer}'s Turn`;
+            status.classList.remove('text-blue-500', 'text-red-500', 'text-gray-600', 'dark:text-gray-300');
+            status.classList.add('text-blue-500');
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.classList.remove(
+                    'text-blue-500', 'text-red-500', 'winner-cell', 
+                    'bg-blue-100', 'bg-red-100', 
+                    'dark:bg-blue-900/50', 'dark:bg-red-900/50'
+                );
+                cell.classList.add('bg-white', 'dark:bg-gray-800');
+            });
+        }
+
+        function undoMove() {
+            if (moveHistory.length > 0) {
+                const lastMove = moveHistory.pop();
+                gameBoard[lastMove.index] = '';
+                cells[lastMove.index].textContent = '';
+                cells[lastMove.index].classList.remove(
+                    'text-blue-500', 'text-red-500', 
+                    'bg-blue-100', 'bg-red-100', 
+                    'dark:bg-blue-900/50', 'dark:bg-red-900/50'
+                );
+                cells[lastMove.index].classList.add('bg-white', 'dark:bg-gray-800');
+                currentPlayer = lastMove.player;
+                gameActive = true;
+                status.textContent = `Player ${currentPlayer}'s Turn`;
+                status.classList.remove('text-blue-500', 'text-red-500', 'text-gray-600', 'dark:text-gray-300');
+                status.classList.add(currentPlayer === 'X' ? 'text-blue-500' : 'text-red-500');
+                undoBtn.disabled = moveHistory.length === 0;
+                
+                // Remove winner highlights if any
+                cells.forEach(cell => {
+                    cell.classList.remove('winner-cell');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -10,7 +10,7 @@ https://1flietictactoe.netlify.app/
 
 ### Watch it in action:
 
-![Tic Tac Toe Demo](./TicTacToe.mp4)
+![Tic Tac Toe Demo](./TicTacToe.gif)
 
 ## Features
 

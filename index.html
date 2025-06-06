@@ -41,6 +41,21 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
+
+    <div class="absolute top-4 right-4">
+        <button id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300" aria-label="Switch to dark mode">
+            <span id="themeIcon" class="block">
+                <!-- Sun/Moon SVG will be set by JS -->
+                <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="currentColor"/>
+                    <path stroke="currentColor" stroke-width="2" d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95 6.95l-1.414-1.414M6.464 6.464L5.05 5.05m13.9 0l-1.414 1.414M6.464 17.536l-1.414 1.414"/>
+                </svg>
+                <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke="currentColor" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/>
+                </svg>
+            </span>
+        </button>
+    </div>
     
     <div class="text-center mb-8">
         <h1 class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">Tic Tac Toe</h1>
@@ -106,6 +121,8 @@
         const resetBtn = document.getElementById('reset');
         const undoBtn = document.getElementById('undo');
         const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
         let currentPlayer = 'X';
         let gameBoard = ['', '', '', '', '', '', '', '', ''];
         let gameActive = true;
@@ -125,6 +142,20 @@
         resetBtn.addEventListener('click', resetGame);
         undoBtn.addEventListener('click', undoMove);
 
+        // Update theme icon visibility
+        function updateThemeIcon() {
+            if (document.documentElement.classList.contains('dark')) {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            }
+        }
+
+        // Initial icon state
+        updateThemeIcon();
+
         themeToggle.addEventListener('click', () => {
             // Toggle dark class on html element
             document.documentElement.classList.toggle('dark');
@@ -139,6 +170,7 @@
             // Update button label for screen readers
             const isDark = document.documentElement.classList.contains('dark');
             themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+            updateThemeIcon();
         });
 
         // Add initial aria-label

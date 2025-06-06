@@ -4,6 +4,14 @@ A modern, responsive Tic Tac Toe game built with HTML, Tailwind CSS, and JavaScr
 
 ![Tic Tac Toe Screenshot](./screenshot.png)
 
+## Demo
+
+https://1flietictactoe.netlify.app/
+
+### Watch it in action:
+
+![Tic Tac Toe Demo](./TicTacToe.mp4)
+
 ## Features
 
 - **Interactive Gameplay:** Play as X or O against another player on the same device.
@@ -32,6 +40,8 @@ A modern, responsive Tic Tac Toe game built with HTML, Tailwind CSS, and JavaScr
 
 - `TicTacToe.html` — Main game file with all logic and styles.
 - `README.md` — This documentation.
+- `screenshot.png` — Screenshot of the game.
+- `TicTacToe.mp4` — Demo video of the game.
 
 ## Customization
 

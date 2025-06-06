@@ -2,6 +2,8 @@
 
 A modern, responsive Tic Tac Toe game built with HTML, Tailwind CSS, and JavaScript. Which is made only in one file.
 
+![Tic Tac Toe Screenshot](./screenshot.png)
+
 ## Features
 
 - **Interactive Gameplay:** Play as X or O against another player on the same device.

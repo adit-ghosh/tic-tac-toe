@@ -162,6 +162,7 @@
                     gameActive = false;
                     scores[currentPlayer]++;
                     updateScoreDisplay();
+                    undoBtn.disabled = true; // Disable undo when game is finished
                     return;
                 }
 
@@ -171,6 +172,7 @@
                     gameActive = false;
                     scores.draws++;
                     updateScoreDisplay();
+                    undoBtn.disabled = true; // Disable undo when game is finished
                     return;
                 }
 

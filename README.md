@@ -14,7 +14,7 @@ A modern, responsive Tic Tac Toe game built with HTML, Tailwind CSS, and JavaScr
 
 ## How to Use
 
-1. **Open `TicTacToe.html` in your browser.**
+1. **Open `https://1flietictactoe.netlify.app/` in your browser.**
 2. Click on any cell to make your move.
 3. Use the **Reset Game** button to start over.
 4. Use the **Undo Move** button to revert the last move.
